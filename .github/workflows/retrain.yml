@@ -1,0 +1,57 @@
+name: Drift Check and Auto-Retrain
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # runs daily at 6:00 AM UTC
+  workflow_dispatch:        # lets you trigger it manually from the Actions tab
+
+jobs:
+  check-and-retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run drift monitoring
+        run: python src/monitor.py
+
+      - name: Check drift and retrain if needed
+        id: drift_check
+        run: |
+          python -c "
+          import json
+          with open('data/monitoring/drift_summary.json') as f:
+              results = json.load(f)
+          latest = results[-1]
+          share = latest['drifted_columns_share']
+          print(f'Latest drift share: {share}')
+          if share >= 0.15:
+              print('DRIFT DETECTED — triggering retrain')
+              exit(1)
+          else:
+              print('No significant drift — skipping retrain')
+              exit(0)
+          "
+        continue-on-error: true
+
+      - name: Retrain model (only if drift detected)
+        if: steps.drift_check.outcome == 'failure'
+        run: python src/train.py
+
+      - name: Commit updated model
+        if: steps.drift_check.outcome == 'failure'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/model/
+          git commit -m "Auto-retrain: drift threshold exceeded" || echo "No changes to commit"
+          git push
