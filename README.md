@@ -2,7 +2,7 @@
 
 An end-to-end MLOps pipeline that monitors a churn prediction model in production, detects data drift automatically, and retrains itself when needed — with zero manual intervention.
 
-** Live Dashboard:** *(add your Streamlit Cloud link here after deployment)*
+** Live Dashboard:https://mlops-drift-monitor-i6zkvvgjb4y9infjnhmns8.streamlit.app/
 
 ---
 
