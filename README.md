@@ -1,8 +1,8 @@
-# 📊 MLOps Drift Monitor
+#  MLOps Drift Monitor
 
 An end-to-end MLOps pipeline that monitors a churn prediction model in production, detects data drift automatically, and retrains itself when needed — with zero manual intervention.
 
-**🔗 Live Dashboard:** *(add your Streamlit Cloud link here after deployment)*
+** Live Dashboard:** *(add your Streamlit Cloud link here after deployment)*
 
 ---
 
@@ -118,14 +118,5 @@ Each incoming batch is compared against the original training data using Evident
 
 Building this taught me that the hard part of ML isn't training a model — it's *keeping it correct over time*. Implementing drift detection and automated retraining gave me hands-on experience with the MLOps practices that separate a notebook experiment from a production system: monitoring, automation, and self-healing pipelines. I also worked through real infrastructure issues along the way — Docker networking errors, dependency conflicts, and CI permission settings — which mirrors the kind of debugging real ML engineering work involves.
 
-## Future Improvements
-
-- Swap simulated drift for a real streaming data source
-- Add Slack/email alerts when drift is detected
-- Track model version history and rollback capability
-- Add classification performance metrics (not just data drift) to the retrain trigger
-- Deploy with a managed model registry (e.g. MLflow) for version tracking
-
----
 
 Built by **Mahak Khan** — [LinkedIn](https://linkedin.com/in/mahak-khan-50ba99270)
